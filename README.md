@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/jules-vanaret/napari-utrack-loader/branch/main/graph/badge.svg)](https://codecov.io/gh/jules-vanaret/napari-utrack-loader)
 [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-utrack-loader)](https://napari-hub.org/plugins/napari-utrack-loader)
 
-A simple plugin to use FooBar segmentation within napari
+A simple plugin to load images, detections and tracks from the u-track software into napari.
 
 ----------------------------------
 
