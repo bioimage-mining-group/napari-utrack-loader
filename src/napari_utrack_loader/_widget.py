@@ -234,30 +234,4 @@ class UtrackLoader(Container):
 
             self._viewer.layers['Tracks'].color_by = 'random_id'
 
-            
-
-                
-
-                
-
-
-
-
-if __name__ == '__main__':
-    import napari
-    viewer = napari.Viewer()
-    widget = UtrackLoader(viewer)
-
-    path_image = '/home/jvanaret/data/data_claudio/ch1'
-    path_detections = '/home/jvanaret/data/data_claudio/channel_2.mat.json'
-    path_tracks = '/home/jvanaret/data/data_claudio/Channel_2_tracking_result.mat.json'
-
-    widget._image_folder_path.value = path_image
-    widget._detections_file_path.value = path_detections
-    widget._track_file_path.value = path_tracks
-
-    viewer.window.add_dock_widget(widget)
-
-    napari.run()
-
     
