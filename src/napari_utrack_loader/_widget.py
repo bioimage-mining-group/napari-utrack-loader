@@ -101,7 +101,7 @@ class UtrackLoader(Container):
 
             self._viewer.add_image(
                 image, 
-                name=f'Movie {os.path.basename(path)}',
+                name=f'{os.path.basename(path)}',
             )
 
     def _load_detections(self, paths):
@@ -153,7 +153,7 @@ class UtrackLoader(Container):
                 self._viewer.add_points(
                     points_data, 
                     # size=sizes,
-                    name=os.path.basename(path),
+                    name=os.path.basename(path)[:-5],
                 )
 
     def _handle_nones_in_track_object(self, track_object, ndim):
@@ -238,7 +238,7 @@ class UtrackLoader(Container):
 
                 self._viewer.add_tracks(
                     napari_tracks,
-                    name=os.path.basename(path),
+                    name=os.path.basename(path)[:-5],
                     blending='translucent',
                     properties={
                         'random_id': self._random_id_property(napari_tracks)
