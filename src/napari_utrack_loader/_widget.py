@@ -25,12 +25,12 @@ class UtrackLoader(Container):
 
         self._detections_file_path = create_widget(
             widget_type="FileEdit", label="Detections Json File",
-            options={'mode':'r'}
+            options={'mode':'rm', 'filter':'*.json'} # mode 'rm' means several files
         )
 
         self._track_file_path = create_widget(
             widget_type="FileEdit", label="Tracks Json File",
-            options={'mode':'r'}
+            options={'mode':'rm', 'filter':'*.json'} # mode 'rm' means several files
         )
 
         self._load_button = create_widget(
