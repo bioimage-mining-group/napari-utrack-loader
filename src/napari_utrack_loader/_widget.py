@@ -320,9 +320,6 @@ if __name__ == "__main__":
     import napari
     viewer = napari.Viewer()
     widget = UtrackLoader(viewer)
-    viewer.window.add_dock_widget(widget, area='right') 
-
-    widget._image_folder_path.value = '/home/jvanaret/data/data_claudio/ch1'
-    widget._track_file_path.value = '/home/jvanaret/data/data_claudio/Channel_2_tracking_result.mat.json'
+    viewer.window.add_dock_widget(widget, area='right')
 
     napari.run()
