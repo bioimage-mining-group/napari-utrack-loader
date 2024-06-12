@@ -284,7 +284,7 @@ class UtrackLoader(Container):
         def on_double_click(layer, event):
             cursor_position = event.position
             track_id = tracks_layer.get_value(cursor_position)
-            if track_id is None:
+            if track_id is None or len(self._image_layers) == 0:
                 return
             print(f'Track id: {track_id}')
 
