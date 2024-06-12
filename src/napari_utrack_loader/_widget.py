@@ -6,6 +6,7 @@ import tifffile
 import numpy as np
 import json
 from napari.utils import progress
+import matplotlib.pyplot as plt
 
 if TYPE_CHECKING:
     import napari
@@ -52,11 +53,8 @@ class UtrackLoader(Container):
 
     def _load(self):
         image_path = self._process_path_value(self._image_folder_path)
-        print(self._image_folder_path)
         detections_path = self._process_path_value(self._detections_file_path)
-        print(self._detections_file_path)
         track_path = self._process_path_value(self._track_file_path)
-        print(self._track_file_path)
 
         
         self._viewer.window._status_bar._toggle_activity_dock(True)
@@ -90,7 +88,11 @@ class UtrackLoader(Container):
         return [path for path in paths if path is not None]
 
     def _load_image(self, paths):
+        image_layers = []
+
         for path in paths:
+            if path is None or path == '.':
+                continue
             files = os.listdir(path)
             files = [f for f in files if f.endswith('.tif')]
             files.sort()
@@ -99,12 +101,21 @@ class UtrackLoader(Container):
                 [tifffile.imread(os.path.join(path, f)) for f in progress(files, desc='Loading images')]
             )
 
-            self._viewer.add_image(
+            image_layer = self._viewer.add_image(
                 image, 
                 name=f'{os.path.basename(path)}',
             )
 
+            image_layers.append(image_layer)
+
+        self._image_layers = image_layers
+
+    def _format_path_for_layer_name(self, path):
+        return os.path.basename(path).split('.')[0]
+
     def _load_detections(self, paths):
+
+        detections_layers = []
 
         for path in paths:
 
@@ -150,11 +161,16 @@ class UtrackLoader(Container):
                 # TODO: implement ellipses
                 sizes = np.mean(sizes, axis=1)
 
-                self._viewer.add_points(
+                layer_name = self._format_path_for_layer_name(path)
+                points_layer = self._viewer.add_points(
                     points_data, 
                     # size=sizes,
-                    name=os.path.basename(path)[:-5],
+                    name=layer_name,
                 )
+
+                detections_layers.append(points_layer)
+
+        self._detections_layers = detections_layers
 
     def _handle_nones_in_track_object(self, track_object, ndim):
 
@@ -206,6 +222,9 @@ class UtrackLoader(Container):
         return self._vec_translate(tracks_ids, id_dict)
 
     def _load_tracks(self, paths):
+
+        tracks_layers = []
+
         for path in paths:
             with open(path, 'r') as json_file:
                 track_objects = json.load(json_file)
@@ -236,21 +255,74 @@ class UtrackLoader(Container):
 
                     i_tracks += nframes_object
 
-                self._viewer.add_tracks(
+                layer_name = os.path.basename(path)[:-5]
+                tracks_layer = self._viewer.add_tracks(
                     napari_tracks,
-                    name=os.path.basename(path)[:-5],
+                    name=layer_name,
                     blending='translucent',
                     properties={
                         'random_id': self._random_id_property(napari_tracks)
                     }
                 )
 
-                self._viewer.layers[-1].color_by = 'random_id'
+                tracks_layer.color_by = 'random_id'
+
+                self._add_tracks_clicking_behaviour(tracks_layer)
+
+                tracks_layers.append(tracks_layer)
+
+        self._tracks_layers = tracks_layers
+
+
+
+    def _add_tracks_clicking_behaviour(self, tracks_layer):
+
+        self._fig = None
+        self._ax = None
+
+        @tracks_layer.mouse_double_click_callbacks.append
+        def on_double_click(layer, event):
+            cursor_position = event.position
+            track_id = tracks_layer.get_value(cursor_position)
+            if track_id is None:
+                return
+            print(f'Track id: {track_id}')
+
+            track_data = tracks_layer.data
+            track_data = track_data[track_data[:,0] == track_id][:, 1:]
+
+            indices = track_data.round().astype(int)
+            frame_indices = indices[:,0]
+
+            if self._fig is None or not plt.fignum_exists(self._fig.number):            
+                fig, ax = plt.subplots(1, 1)
+                self._fig = fig
+                self._ax = ax
+                ax.set_xlabel('Frame index')
+                ax.set_ylabel('Intensity')
+
+            for image_layer in self._image_layers:
+                data = image_layer.data[tuple(indices.T)]
+
+                self._ax.plot(frame_indices, data, '-o', 
+                              label=f'{image_layer.name}, id: {track_id}')
+
+            self._ax.legend()
+            self._fig.canvas.draw()
+            self._fig.show()
+
+
+
+
+            
 
 if __name__ == "__main__":
     import napari
     viewer = napari.Viewer()
     widget = UtrackLoader(viewer)
     viewer.window.add_dock_widget(widget, area='right') 
+
+    widget._image_folder_path.value = '/home/jvanaret/data/data_claudio/ch1'
+    widget._track_file_path.value = '/home/jvanaret/data/data_claudio/Channel_2_tracking_result.mat.json'
 
     napari.run()
