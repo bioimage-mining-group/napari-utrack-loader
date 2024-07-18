@@ -140,6 +140,8 @@ class UtrackLoader(Container):
             self._viewer.add_points(
                 points_data, 
                 # size=sizes,
+                edge_color='orange',
+                face_color='transparent',
                 name='Detections'
             )
 
