@@ -28,7 +28,7 @@ dependencies = [
     "numpy",
     "magicgui",
     "qtpy",
-    'matplotlib',
+    "matplotlib",
     "tifffile"
 ]
 
