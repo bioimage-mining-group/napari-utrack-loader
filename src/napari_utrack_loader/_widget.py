@@ -301,11 +301,12 @@ class UtrackLoader(Container):
                 ax.set_xlabel('Frame index')
                 ax.set_ylabel('Intensity')
 
-            for image_layer in self._image_layers:
-                data = image_layer.data[tuple(indices.T)]
+            for layer in self._viewer.layers:
+                if layer.__class__.__name__ == 'Image':
+                    data = layer.data[tuple(indices.T)]
 
-                self._ax.plot(frame_indices, data, '-o', 
-                              label=f'{image_layer.name}, id: {track_id}')
+                    self._ax.plot(frame_indices, data, '-o', 
+                                label=f'{layer.name}, id: {track_id}')
 
             self._ax.legend()
             self._fig.canvas.draw()
