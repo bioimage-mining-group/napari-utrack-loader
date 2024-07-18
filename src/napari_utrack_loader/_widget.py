@@ -7,6 +7,11 @@ import numpy as np
 import json
 from napari.utils import progress
 import matplotlib.pyplot as plt
+from scipy.ndimage import median_filter
+from time import time
+from tqdm.contrib.concurrent import process_map
+from functools import partial
+import os
 
 if TYPE_CHECKING:
     import napari
@@ -22,6 +27,29 @@ class UtrackLoader(Container):
         self._image_folder_path = create_widget(
             widget_type="FileEdit", label="Image Folder",
             options={'mode':'d'}
+        )
+
+        self._normalize_checkbox = create_widget(
+            widget_type="CheckBox", label="Normalize with percentiles",
+        )
+
+        self._median_filter_checkbox = create_widget(
+            widget_type="CheckBox", label="Filter size:",
+        )
+
+        self._filter_size = create_widget(
+            widget_type="SpinBox", label="Filter size",
+            options={'value':3, 'min':1, 'max':20, 'step':1}
+        )
+
+        self._filter_container = Container(
+            widgets=[
+                self._median_filter_checkbox,
+                self._filter_size,
+            ],
+            layout='horizontal',
+            labels=False,
+            label='Apply median filter'
         )
 
         self._detections_file_path = create_widget(
@@ -44,6 +72,8 @@ class UtrackLoader(Container):
         self.extend(
             [
                 self._image_folder_path,
+                self._normalize_checkbox,
+                self._filter_container,
                 self._detections_file_path,
                 self._track_file_path,
                 EmptyWidget(),
@@ -55,18 +85,17 @@ class UtrackLoader(Container):
         image_path = self._process_path_value(self._image_folder_path)
         detections_path = self._process_path_value(self._detections_file_path)
         track_path = self._process_path_value(self._track_file_path)
-
         
         self._viewer.window._status_bar._toggle_activity_dock(True)
-        if image_path is not None:
+        if len(image_path) > 0:
             self._load_image(image_path)
 
         self._viewer.window._status_bar._toggle_activity_dock(True)
-        if detections_path is not None:
+        if len(detections_path) > 0:
             self._load_detections(detections_path)
 
         self._viewer.window._status_bar._toggle_activity_dock(True)
-        if track_path is not None:
+        if len(track_path) > 0:
             self._load_tracks(track_path)
         
         self._viewer.window._status_bar._toggle_activity_dock(False)
@@ -86,6 +115,29 @@ class UtrackLoader(Container):
         ]
 
         return [path for path in paths if path is not None]
+    
+    def _normalize(self, image, use_percentiles):
+        if use_percentiles:
+            perc_min, perc_max = np.percentile(image, (0.1, 99.9), axis=(1, 2))
+            image = (image - perc_min[:, None, None]) / (perc_max - perc_min)[:, None, None]
+        else:
+            image = (image - np.min(image)) / (np.max(image) - np.min(image))
+        return np.clip(image, 0, 1)
+    
+    def _apply_median_filter(self, image, size):
+        t0 = time()
+        func = partial(median_filter, size=size)
+        # chunksize = int(image.shape[0] / (4*os.cpu_count()))
+        chunksize = 1
+        image = np.array(
+            process_map(
+                func, image, 
+                max_workers=os.cpu_count(), chunksize=chunksize, 
+                desc='Applying median filter'
+            )
+        )
+        print(f'Median filter applied in {time()-t0:.2f} s')
+        return image
 
     def _load_image(self, paths):
         image_layers = []
@@ -98,8 +150,17 @@ class UtrackLoader(Container):
             files.sort()
 
             image = np.array(
-                [tifffile.imread(os.path.join(path, f)) for f in progress(files, desc='Loading images')]
+                [
+                    tifffile.imread(
+                        os.path.join(path, f)
+                    ) for f in progress(files, desc='Loading images')
+                ]
             )
+
+            image = self._normalize(image, use_percentiles=self._normalize_checkbox.value)
+
+            if self._median_filter_checkbox.value:
+                image = self._apply_median_filter(image, size=self._filter_size.value)
 
             image_layer = self._viewer.add_image(
                 image, 
