@@ -118,8 +118,11 @@ class UtrackLoader(Container):
     
     def _normalize(self, image, use_percentiles):
         if use_percentiles:
-            perc_min, perc_max = np.percentile(image, (0.1, 99.9), axis=(1, 2))
-            image = (image - perc_min[:, None, None]) / (perc_max - perc_min)[:, None, None]
+            # perc_min, perc_max = np.percentile(image, (0.1, 99.9), axis=(1, 2))
+            # image = (image - perc_min[:, None, None]) / (perc_max - perc_min)[:, None, None]
+
+            perc_min, perc_max = np.percentile(image, (0.1, 99.9))
+            image = (image - perc_min) / (perc_max - perc_min)
         else:
             image = (image - np.min(image)) / (np.max(image) - np.min(image))
         return np.clip(image, 0, 1)
