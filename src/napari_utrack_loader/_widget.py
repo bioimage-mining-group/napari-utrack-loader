@@ -85,6 +85,10 @@ class UtrackLoader(Container):
         image_path = self._process_path_value(self._image_folder_path)
         detections_path = self._process_path_value(self._detections_file_path)
         track_path = self._process_path_value(self._track_file_path)
+
+        print('image path:', image_path)
+        print('detections path:', detections_path)
+        print('track path:', track_path)
         
         self._viewer.window._status_bar._toggle_activity_dock(True)
         if len(image_path) > 0:
@@ -110,7 +114,7 @@ class UtrackLoader(Container):
         paths = [str(value) for value in path_value]
         paths = [
             path
-            if (path != '' and os.path.exists(path)) else None
+            if (path != '.' and path != '' and os.path.exists(path)) else None
             for path in paths
         ]
 
