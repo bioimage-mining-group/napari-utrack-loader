@@ -10,6 +10,12 @@ Here are the main Features
 
 This code in this repositories requires the installation of several libraries (a.k.a. dependencies). Here are the installation on how to install it on Windows, Mac OS or Linux. 
 
+### Installing the present git repository on your machine
+
+*If you do not have git installed on your machine*. Install git using this basic tutorial: https://github.com/git-guides/install-git . Then open the git command prompt (or any command prompt), execute the following command in a software of your choice: 
+
+> git clone git@github.com:bioimage-mining-group/napari-utrack-loader.git
+
 ### Creating a Conda environment
 
 *If you do not have conda installed already*. You can use the simple instructions at the link below to install **miniconda**, a version of conda that comes with the basic tools you need. 
