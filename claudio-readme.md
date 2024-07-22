@@ -14,7 +14,7 @@ This code in this repositories requires the installation of several libraries (a
 
 *If you do not have git installed on your machine*. Install git using this basic tutorial: https://github.com/git-guides/install-git . Then open the git command prompt (or any command prompt), execute the following command in a software of your choice: 
 
-> git clone git@github.com:bioimage-mining-group/napari-utrack-loader.git
+`https://github.com/bioimage-mining-group/napari-utrack-loader`
 
 ### Creating a Conda environment
 
