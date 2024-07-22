@@ -14,12 +14,9 @@ This code in this repositories requires the installation of several libraries (a
 
 *If you do not have git installed on your machine*. Install git using this basic tutorial: https://github.com/git-guides/install-git . Then open the git command prompt (or any command prompt), execute the following command in a software of your choice: 
 
-
-
 ``` shell
-https://github.com/bioimage-mining-group/napari-utrack-loader
+git clone git@github.com:bioimage-mining-group/napari-utrack-loader.git
 ```
-
 
 ### Creating a Conda environment
 
@@ -27,20 +24,24 @@ https://github.com/bioimage-mining-group/napari-utrack-loader
 
 https://docs.anaconda.com/miniconda/miniconda-install/
 
-To create an environment dedicated for your software, open your command line prompt using the instruction at the link above (that depends on your operating system). Then type
+To create and activate an environment dedicated for your software, open your command line prompt (using the instruction at the link above to find what is your prompt, that depends on your operating system). Then type
 
 ```
 conda create -n napari-u-track-loader-v1 python=3.9
+conda activate napari-u-track-loader-v1
 ``` 
 
-Then install the software: 
+Then install napari and the software with its other dependencies: 
 
 ```
+conda install -c conda-forge napari pyqt
 pip install -e . 
 ``` 
 
+Note: we do not use 'pip install' for napari due to some problem in mac os. 
 
-***What is conda environment?**
+**What is conda environment?**
+
 Python is a very popular language. As such, many code libaries have been developped by the community and almost all pieces of code relies on those libraries that must be installed beforehand on your machine (for example, in this plugin, we use napari for image display and matplotlib for plotting graphs). One of the challenge brought by this diversity is in making sure the code is using the libraries it was developped with. To solve this issue, conda is tool that enable the creation of "environnent" where we can specify the exact versions of the libraries that must be installed. That way a conda user can be working on different software using different library versions. There is several alternative to conda for the same task, such as Poetry or Rye. 
 
 ### Installing the code and dependency
@@ -59,10 +60,16 @@ napari
 ``` 
 
 Follow this video for a tutorial: 
+https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1717858798VD4BYVVZBDhdMFcxVjhQcAc5CDUAIQNqUDsFOFQ1DTcCNlNuVTACZQQ1AjZQYg==
+
+
+The data used for the demo is at 
+https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1501984592CGIAYAMPAT0Ga1I0AW8DI1xiCzYAIQZvAGsHOgRlXWdXYlVlAWYBYlNlU2ZSZg==
+
 
 ## Updating the code 
 
-To update the code through git, just download the latest version with git pull. No additional changes are needed. 
+To update the code through git, just go in the repository folder and download the latest version with git pull. No additional changes are needed. 
 
 ```
 git pull
