@@ -60,12 +60,10 @@ napari
 ``` 
 
 Follow this video for a tutorial: 
-https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1717858798VD4BYVVZBDhdMFcxVjhQcAc5CDUAIQNqUDsFOFQ1DTcCNlNuVTACZQQ1AjZQYg==
-
+https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=742562852AGoHZwAMAT1VOFA2C2VcfFBuW2ZQcQNqUDsHOlMyDzUGM1JiAWZQMgA7BTAFNw==
 
 The data used for the demo is at 
 https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1501984592CGIAYAMPAT0Ga1I0AW8DI1xiCzYAIQZvAGsHOgRlXWdXYlVlAWYBYlNlU2ZSZg==
-
 
 ## Updating the code 
 
