@@ -17,6 +17,7 @@ This code in this repositories requires the installation of several libraries (a
 ``` shell
 # git clone git@github.com:bioimage-mining-group/napari-utrack-loader.git
 git clone https://github.com/bioimage-mining-group/napari-utrack-loader.git
+cd napari-utrack-loader
 ```
 
 ### Creating a Conda environment
