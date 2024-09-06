@@ -10,7 +10,7 @@ Here are the main Features
 
 This code in this repositories requires the installation of several libraries (a.k.a. dependencies). Here are the installation on how to install it on Windows, Mac OS or Linux. 
 
-### Installing the present git repository on your machine
+### Downloading the present git repository on your machine
 
 *If you do not have git installed on your machine*. Install git using this basic tutorial: https://github.com/git-guides/install-git . Then open the git command prompt (or any command prompt), execute the following command in a software of your choice: 
 
@@ -20,7 +20,7 @@ git clone https://github.com/bioimage-mining-group/napari-utrack-loader.git
 cd napari-utrack-loader
 ```
 
-### Creating a Conda environment
+### Creating a Conda environment and installing the code dependency in it
 
 *If you do not have conda installed already*. You can use the simple instructions at the link below to install **miniconda**, a version of conda that comes with the basic tools you need. 
 
@@ -45,8 +45,6 @@ Note: we do not use 'pip install' for napari due to some problem in mac os.
 **What is conda environment?**
 
 Python is a very popular language. As such, many code libaries have been developped by the community and almost all pieces of code relies on those libraries that must be installed beforehand on your machine (for example, in this plugin, we use napari for image display and matplotlib for plotting graphs). One of the challenge brought by this diversity is in making sure the code is using the libraries it was developped with. To solve this issue, conda is tool that enable the creation of "environnent" where we can specify the exact versions of the libraries that must be installed. That way a conda user can be working on different software using different library versions. There is several alternative to conda for the same task, such as Poetry or Rye. 
-
-### Installing the code and dependency
 
 ## Usage
 
